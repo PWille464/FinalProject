@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .game-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .close {
+            color: orange;
+        }
+        .far {
+            color: red;
+        }
+        .win {
+            color: green;
+        }
+        .game-info {
+            font-size: 14px;
+            color: #555;
+            margin-top: 20px;
+        }
+        #playAgainButton {
+            background-color: #007bff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Number Guessing Game</h1>
+        <p>Guess the number between 1 and 100. You have 10 guesses!</p>
+        <p id="range">The number is between 1 and 100</p>
+        <input type="number" id="guess" placeholder="Enter your guess" min="1" max="100">
+        <button id="submitGuess" onclick="checkGuess()">Submit Guess</button>
+        <p id="attemptsLeft">Attempts left: 10</p>
+        <p id="resultMessage" class="result"></p>
+        <p id="gameStatus" class="game-info"></p>
+        <button id="playAgainButton" onclick="playAgain()" style="display: none;">Play Again</button>
+    </div>
+
+    <script>
+        let targetNumber;
+        let attempts;
+
+        function initializeGame() {
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 10;
+            document.getElementById('submitGuess').disabled = false;
+            document.getElementById('playAgainButton').style.display = 'none';
+            document.getElementById('resultMessage').textContent = '';
+            document.getElementById('gameStatus').textContent = '';
+            document.getElementById('attemptsLeft').textContent = `Attempts left: ${attempts}`;
+            document.getElementById('range').textContent = `The number is between 1 and 100`;
+        }
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guess').value);
+            const resultMessage = document.getElementById('resultMessage');
+            const attemptsLeft = document.getElementById('attemptsLeft');
+            const range = document.getElementById('range');
+            const gameStatus = document.getElementById('gameStatus');
+
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                resultMessage.textContent = "Please enter a valid number between 1 and 100.";
+                resultMessage.classList.remove('close', 'far', 'win');
+                return;
+            }
+
+            attempts--;
+
+            if (guess === targetNumber) {
+                resultMessage.textContent = "You win! The number was " + targetNumber + ".";
+                resultMessage.classList.add('win');
+                gameStatus.textContent = "Congratulations! You guessed the number!";
+                document.getElementById('submitGuess').disabled = true;
+                document.getElementById('playAgainButton').style.display = 'inline-block';
+            } else {
+                if (attempts > 0) {
+                    if (Math.abs(guess - targetNumber) <= 10) {
+                        resultMessage.textContent = "You're close!";
+                        resultMessage.classList.add('close');
+                    } else {
+                        resultMessage.textContent = "You're far away.";
+                        resultMessage.classList.add('far');
+                    }
+                    attemptsLeft.textContent = "Attempts left: " + attempts;
+                    range.textContent = `The number is between ${Math.max(1, targetNumber - 10)} and ${Math.min(100, targetNumber + 10)}.`;
+                } else {
+                    resultMessage.textContent = "Game over! The number was " + targetNumber + ".";
+                    resultMessage.classList.remove('close', 'far');
+                    gameStatus.textContent = "Better luck next time!";
+                    document.getElementById('submitGuess').disabled = true;
+                    document.getElementById('playAgainButton').style.display = 'inline-block';
+                }
+            }
+        }
+
+        function playAgain() {
+            initializeGame();
+        }
+
+        // Start the game when the page loads
+        initializeGame();
+    </script>
+    <br>
+    <a href="scratch.html">Scratch Page</a>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <a href="index.html">Home Page</a>
+</body>
+</html>
